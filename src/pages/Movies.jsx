@@ -1,7 +1,16 @@
+import { useState } from "react";
+import SearchBar from "../components/ui/SearchBar";
+
 const Movies = () => {
+  const [search, setSearch] = useState("");
+
   return (
     <div>
-      <h1>Movies</h1>
+      <SearchBar
+        search={search}
+        setSearch={setSearch}
+        placeholder="Search for movies"
+      />
     </div>
   );
 };

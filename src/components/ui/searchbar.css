@@ -1,0 +1,19 @@
+.search {
+  display: flex;
+  gap: var(--spacing-xs);
+  width: 100%;
+  margin: var(--spacing-sm) 0;
+}
+
+.search-bar {
+  flex: 1;
+  background: none;
+  outline: none;
+  border: none;
+}
+
+@media (min-width: 768px) {
+  .search {
+    margin: var(--spacing-md) 0;
+  }
+}

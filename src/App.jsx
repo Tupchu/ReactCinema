@@ -8,6 +8,7 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import Home from "./pages/Home";
 import Movies from "./pages/Movies";
 import Television from "./pages/Television";
+import Bookmarked from "./pages/Bookmarked";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import NavBar from "./components/ui/Navbar";
@@ -28,7 +29,8 @@ const ClerkProviderWithRoutes = () => {
           <Routes>
             <Route index element={<Home />} />
             <Route path="movies" element={<Movies />} />
-            <Route path="movies" element={<Television />} />
+            <Route path="television" element={<Television />} />
+            <Route path="bookmarked" element={<Bookmarked />} />
             <Route path="signin" element={<Signin />} />
             <Route path="signup" element={<Signup />} />
           </Routes>

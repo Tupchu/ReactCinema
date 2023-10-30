@@ -106,6 +106,7 @@ const SigninForm = () => {
             type="text"
             placeholder="Username"
             aria-label="Username"
+            autoFocus
           />
           <p className="error-text">{errors.username}</p>
         </div>

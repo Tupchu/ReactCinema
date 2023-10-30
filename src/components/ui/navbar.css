@@ -44,6 +44,7 @@
   .main-nav {
     flex-direction: column;
     height: 100%;
+    padding: var(--spacing-md) var(--spacing-sm);
   }
 
   .links {
