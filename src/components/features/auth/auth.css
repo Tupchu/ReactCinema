@@ -1,0 +1,62 @@
+/* Auth Form */
+.auth-form {
+  border-radius: 1.25rem;
+  background-color: var(--clr-background-dark);
+  padding: var(--spacing-md);
+  position: relative;
+}
+
+.form-logo {
+  position: absolute;
+  top: -15%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.form-items {
+  margin: var(--spacing-lg) 0;
+}
+
+.form-items .error-text {
+  color: var(--clr-accent-red);
+  font-size: var(--fs-body-sm);
+  margin-top: 0.5rem;
+  height: 4px;
+  line-height: 1.1rem;
+}
+
+.form-item {
+  position: relative;
+}
+
+.form-item input {
+  color: inherit;
+  background: none;
+  border: none;
+  border-bottom: solid 1px var(--clr-accent-blue);
+  outline: none;
+  width: 100%;
+  padding: 1rem;
+}
+
+.form-item input:focus {
+  border-bottom-color: var(--clr-white);
+}
+
+.form-item input.error {
+  border-bottom-color: var(--clr-accent-red);
+}
+
+.form-item:not(:last-child) {
+  margin-bottom: var(--spacing-sm);
+}
+
+.auth-form .has-account {
+  margin-top: var(--spacing-sm);
+  text-align: center;
+}
+
+.auth-form .has-account a {
+  text-decoration: none;
+  color: var(--clr-accent-red);
+}
