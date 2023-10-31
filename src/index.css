@@ -41,6 +41,7 @@ html {
 /* Set core body defaults */
 body {
   min-height: 100vh;
+  max-width: 100%;
   background-color: var(--clr-background-darker);
   color: var(--clr-white);
   font-size: var(--fs-body-md);
@@ -83,6 +84,10 @@ a {
 
 a {
   text-decoration: none;
+}
+
+img {
+  max-width: 100%;
 }
 
 /* General */

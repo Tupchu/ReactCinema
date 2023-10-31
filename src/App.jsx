@@ -5,6 +5,11 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { ClerkProvider } from "@clerk/clerk-react";
+import {
+  useQuery,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import Home from "./pages/Home";
 import Movies from "./pages/Movies";
 import Television from "./pages/Television";
@@ -18,24 +23,28 @@ if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
 }
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
+const queryClient = new QueryClient();
+
 const ClerkProviderWithRoutes = () => {
   const navigate = useNavigate();
 
   return (
     <ClerkProvider publishableKey={clerkPubKey} navigate={(to) => navigate(to)}>
-      <div className="content-wrapper">
-        <NavBar />
-        <main className="container">
-          <Routes>
-            <Route index element={<Home />} />
-            <Route path="movies" element={<Movies />} />
-            <Route path="television" element={<Television />} />
-            <Route path="bookmarked" element={<Bookmarked />} />
-            <Route path="signin" element={<Signin />} />
-            <Route path="signup" element={<Signup />} />
-          </Routes>
-        </main>
-      </div>
+      <QueryClientProvider client={queryClient}>
+        <div className="content-wrapper">
+          <NavBar />
+          <main className="container">
+            <Routes>
+              <Route index element={<Home />} />
+              <Route path="movies" element={<Movies />} />
+              <Route path="television" element={<Television />} />
+              <Route path="bookmarked" element={<Bookmarked />} />
+              <Route path="signin" element={<Signin />} />
+              <Route path="signup" element={<Signup />} />
+            </Routes>
+          </main>
+        </div>
+      </QueryClientProvider>
     </ClerkProvider>
   );
 };

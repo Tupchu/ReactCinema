@@ -12,6 +12,32 @@
   border: none;
 }
 
+.close-icon {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.close-icon::before,
+.close-icon::after {
+  content: "";
+  display: flex;
+  height: 2px;
+  background-color: white;
+  width: 25px;
+  color: white;
+}
+
+.close-icon::before {
+  transform: translateY(2px) rotate(45deg);
+}
+
+.close-icon::after {
+  transform: rotate(-45deg);
+}
+
 @media (min-width: 768px) {
   .search {
     margin: var(--spacing-md) 0;

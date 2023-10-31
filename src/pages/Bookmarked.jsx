@@ -6,7 +6,6 @@ const Bookmarked = () => {
 
   return (
     <div>
-      {" "}
       <SearchBar
         search={search}
         setSearch={setSearch}

@@ -17,6 +17,10 @@ const SearchBar = ({ search, setSearch, placeholder }) => {
         className="search-bar"
         autoFocus
       />
+      <div
+        className={search ? "close-icon" : "hidden"}
+        onClick={() => setSearch("")}
+      ></div>
     </div>
   );
 };

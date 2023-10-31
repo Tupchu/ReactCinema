@@ -11,6 +11,11 @@ const Home = () => {
         setSearch={setSearch}
         placeholder="Search for movies or TV series"
       />
+      {/* Trending */}
+      {/* https://developer.themoviedb.org/reference/trending-all */}
+
+      {/* Recommendations -> Only show if user has bookmarked content */}
+      {/* https://developer.themoviedb.org/reference/movie-recommendations */}
     </div>
   );
 };
