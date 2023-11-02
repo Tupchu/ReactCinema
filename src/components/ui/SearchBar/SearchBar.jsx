@@ -15,7 +15,6 @@ const SearchBar = ({ search, setSearch, placeholder }) => {
           setSearch(e.target.value);
         }}
         className="search-bar"
-        autoFocus
       />
       <div
         className={search ? "close-icon" : "hidden"}
