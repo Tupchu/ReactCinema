@@ -1,10 +1,6 @@
 import { useUser, UserButton } from "@clerk/clerk-react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import homeIcon from "../../assets/icon-nav-home.svg";
-import moviesIcon from "../../assets/icon-nav-movies.svg";
-import tvIcon from "../../assets/icon-nav-tv-series.svg";
-import bookmarkedIcon from "../../assets/icon-nav-bookmark.svg";
-import logo from "../../assets/logo.svg";
+import logo from "../../../assets/logo.svg";
 import "./navbar.css";
 
 const Navbar = () => {

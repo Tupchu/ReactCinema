@@ -10,13 +10,14 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Home from "./pages/Home";
 import Movies from "./pages/Movies";
 import Television from "./pages/Television";
 import Bookmarked from "./pages/Bookmarked";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
-import NavBar from "./components/ui/Navbar";
+import NavBar from "./components/ui/Navbar/Navbar";
 
 if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key");
@@ -44,6 +45,7 @@ const ClerkProviderWithRoutes = () => {
             </Routes>
           </main>
         </div>
+        <ReactQueryDevtools initialIsOpen={true} />
       </QueryClientProvider>
     </ClerkProvider>
   );

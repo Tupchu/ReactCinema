@@ -1,5 +1,5 @@
 import { useState } from "react";
-import SearchBar from "../components/ui/SearchBar";
+import SearchBar from "../components/ui/SearchBar/SearchBar";
 
 const Television = () => {
   const [search, setSearch] = useState("");

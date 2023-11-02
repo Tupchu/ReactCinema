@@ -1,5 +1,5 @@
 import { useState } from "react";
-import SearchBar from "../components/ui/SearchBar";
+import SearchBar from "../components/ui/SearchBar/SearchBar";
 
 const Bookmarked = () => {
   const [search, setSearch] = useState("");

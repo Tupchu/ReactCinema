@@ -1,55 +1,73 @@
 import { useEffect, useState } from "react";
-import { useQuery, useQueries } from "@tanstack/react-query";
-import axios from "axios";
-import SearchBar from "../components/ui/SearchBar";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import SearchBar from "../components/ui/SearchBar/SearchBar";
 import ContentCards from "../components/ui/ContentCards/ContentCards";
 import useDebounce from "../hooks/useDebounce";
+import useAxios from "../hooks/useAxios";
 
 const Movies = () => {
   const [search, setSearch] = useState("");
+  const [popularPage, setPopularPage] = useState(1);
+  const [upcomingPage, setUpcomingPage] = useState(1);
+  const [resultsPage, setResultsPage] = useState(1);
+
   const debouncedSearch = useDebounce(search, 1000);
 
-  const setOptions = (url, query) => {
-    return {
-      method: "GET",
-      url,
-      params: { include_adult: "false", language: "en-US", page: "1", query },
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_TMDB_KEY}`,
-      },
-    };
-  };
+  useEffect(() => {
+    if (search === "") {
+      setResultsPage(1);
+    }
+  }, [search]);
 
+  // Popular movies
   const {
-    data: movies,
-    isPending,
-    error,
+    data: popular,
+    isPending: isPopularPending,
+    error: popularError,
+    isPlaceholderData: popularPlaceHolder,
   } = useQuery({
-    queryKey: ["movies"],
+    queryKey: ["popular", popularPage],
     queryFn: () =>
-      axios
-        .request(setOptions("https://api.themoviedb.org/3/movie/popular"))
-        .then((response) => response.data),
+      useAxios("https://api.themoviedb.org/3/movie/popular", "", popularPage),
+    staleTime: 60000,
+    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
-  if (error) return <h2>{error.message}</h2>;
-
+  // Upcoming movies query
   const {
-    data: searchMovies,
-    isPending: isSearchPending,
-    error: searchError,
+    data: upcoming,
+    isPlaceholderData: upcomingPlaceHolder,
+    isPending: isUpcomingPending,
   } = useQuery({
-    queryKey: ["searchMovieResults", debouncedSearch],
+    queryKey: ["upcoming", upcomingPage],
     queryFn: () =>
-      axios
-        .request(
-          setOptions("https://api.themoviedb.org/3/search/movie", search)
-        )
-        .then((response) => response.data),
+      useAxios("https://api.themoviedb.org/3/movie/upcoming", "", upcomingPage),
+    staleTime: 60000,
+    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
-  if (searchError) return <h2>{searchError.message}</h2>;
+  // Search results
+  const {
+    data: results,
+    isPending: isResultsPending,
+    error: resultsError,
+    isPlaceholderData: resultsPlaceHolder,
+  } = useQuery({
+    queryKey: ["results", debouncedSearch, resultsPage],
+    queryFn: () =>
+      useAxios(
+        "https://api.themoviedb.org/3/search/movie",
+        debouncedSearch,
+        resultsPage
+      ),
+    staleTime: 60000,
+    placeholderData: keepPreviousData,
+  });
+
+  if (popularError) return <h2>{popularError.message}</h2>;
+  if (resultsError) return <h2>{resultsError.message}</h2>;
 
   return (
     <div>
@@ -60,16 +78,43 @@ const Movies = () => {
       />
 
       {!search ? (
-        <ContentCards title="Popular" content={movies} contentType="movies" />
+        <>
+          <ContentCards
+            title="Popular"
+            content={popular}
+            contentType="movies"
+            pageCount={popularPage}
+            setPage={setPopularPage}
+            totalPages={popular?.total_pages}
+            isPlaceHolder={popularPlaceHolder}
+            isPending={isPopularPending}
+          />
+
+          <ContentCards
+            title="Upcoming"
+            content={upcoming}
+            contentType="movies"
+            pageCount={upcomingPage}
+            setPage={setUpcomingPage}
+            totalPages={upcoming?.total_pages}
+            isPlaceHolder={upcomingPlaceHolder}
+            isPending={isUpcomingPending}
+          />
+        </>
       ) : (
         <ContentCards
           title="Search results"
-          content={searchMovies}
+          content={results}
           contentType="movies"
+          pageCount={resultsPage}
+          setPage={setResultsPage}
+          totalPages={results?.total_pages}
+          isPlaceHolder={resultsPlaceHolder}
+          isPending={isResultsPending}
         />
       )}
 
-      {(isPending || isSearchPending) && <h1>Loading...</h1>}
+      {/* {(isPending || isSearchPending) && <h1>Loading...</h1>} */}
     </div>
   );
 };

@@ -1,6 +1,6 @@
-import bookmarkEmpty from "../../../assets/icon-bookmark-empty.svg";
-import bookmarkFull from "../../../assets/icon-bookmark-full.svg";
-import "./card.css";
+import bookmarkEmpty from "../../assets/icon-bookmark-empty.svg";
+import bookmarkFull from "../../assets/icon-bookmark-full.svg";
+import "./features.css";
 import { useState } from "react";
 
 const Bookmark = ({ contentType, item }) => {
@@ -9,7 +9,10 @@ const Bookmark = ({ contentType, item }) => {
   // save item to localstorage
 
   return (
-    <div className="bookmark" onClick={() => setBookmarked(!bookmarked)}>
+    <div
+      className="bookmark"
+      onClick={() => setBookmarked((prevValue) => !prevValue)}
+    >
       <img
         src={bookmarked ? bookmarkFull : bookmarkEmpty}
         alt="Not bookmarked"
