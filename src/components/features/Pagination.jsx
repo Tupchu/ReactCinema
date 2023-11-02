@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import "./features.css";
 
 const Pagination = ({
@@ -5,16 +6,17 @@ const Pagination = ({
   pageCount,
   updatePageCount,
   totalPages,
-  isPlaceHolder,
   updateContainerHeight,
   containerRef,
   titleRef,
+  isPlaceHolder,
+  isPending,
 }) => {
   return (
     <div className="pagination">
       <button
         onClick={() => {
-          if (!isPlaceHolder) {
+          if (!isPlaceHolder && !isPending) {
             updateContainerHeight(containerRef.current.clientHeight);
             updatePageCount(title, "-");
             titleRef.current.scrollIntoView({
@@ -31,7 +33,7 @@ const Pagination = ({
       </button>
       <button
         onClick={() => {
-          if (!isPlaceHolder) {
+          if (!isPlaceHolder && !isPending) {
             updateContainerHeight(containerRef.current.clientHeight);
             updatePageCount(title, "+");
             titleRef.current.scrollIntoView({

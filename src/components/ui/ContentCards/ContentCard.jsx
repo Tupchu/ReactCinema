@@ -8,14 +8,14 @@ const basePath = "https://image.tmdb.org/t/p/w780";
 
 const ContentCard = ({ item, contentType }, key) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
-  const date = new Date(item.release_date);
+  const date = new Date(item.release_date || item.first_air_date);
 
   return (
     <div className="content-card" key={key}>
       <img
         src={basePath + item.backdrop_path}
-        alt={item.title}
-        title={item.title}
+        alt={item.title || item.name}
+        title={item.title || item.name}
         className="content-img"
         onLoad={() => setIsImageLoaded(true)}
         style={{ display: isImageLoaded ? "initial" : "none" }}
@@ -39,7 +39,7 @@ const ContentCard = ({ item, contentType }, key) => {
         )}
       </div>
 
-      <h3 className="content-title">{item.title}</h3>
+      <h3 className="content-title">{item.title || item.name}</h3>
     </div>
   );
 };

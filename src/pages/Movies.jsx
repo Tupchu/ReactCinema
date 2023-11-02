@@ -44,6 +44,7 @@ const Movies = () => {
   const {
     data: popular,
     isPending: isPopularPending,
+    isSuccess: isPopularSuccess,
     error: popularError,
     isPlaceholderData: popularPlaceHolder,
   } = useQuery({
@@ -60,6 +61,8 @@ const Movies = () => {
     data: upcoming,
     isPlaceholderData: upcomingPlaceHolder,
     isPending: isUpcomingPending,
+    isSuccess: isUpcomingSuccess,
+    error: upcomingError,
   } = useQuery({
     queryKey: ["upcoming", upcomingPage],
     queryFn: () =>
@@ -73,6 +76,7 @@ const Movies = () => {
   const {
     data: results,
     isPending: isResultsPending,
+    isSuccess: isResultsSuccess,
     error: resultsError,
     isPlaceholderData: resultsPlaceHolder,
   } = useQuery({
@@ -84,10 +88,12 @@ const Movies = () => {
         resultsPage
       ),
     staleTime: 60000,
+    keepPreviousData: true,
     placeholderData: keepPreviousData,
   });
 
   if (popularError) return <h2>{popularError.message}</h2>;
+  if (upcomingError) return <h2>{upcomingError.message}</h2>;
   if (resultsError) return <h2>{resultsError.message}</h2>;
 
   return (
@@ -109,6 +115,7 @@ const Movies = () => {
             totalPages={popular?.total_pages}
             isPlaceHolder={popularPlaceHolder}
             isPending={isPopularPending}
+            isSuccess={isPopularSuccess}
           />
 
           <ContentCards
@@ -120,6 +127,7 @@ const Movies = () => {
             totalPages={upcoming?.total_pages}
             isPlaceHolder={upcomingPlaceHolder}
             isPending={isUpcomingPending}
+            isSuccess={isUpcomingSuccess}
           />
         </>
       ) : (
@@ -132,6 +140,7 @@ const Movies = () => {
           totalPages={results?.total_pages}
           isPlaceHolder={resultsPlaceHolder}
           isPending={isResultsPending}
+          isSuccess={isResultsSuccess}
         />
       )}
     </div>

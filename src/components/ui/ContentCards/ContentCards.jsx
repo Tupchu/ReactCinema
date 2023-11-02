@@ -21,11 +21,13 @@ const ContentCards = ({
   totalPages,
   isPlaceHolder,
   isPending,
+  isSuccess,
 }) => {
-  const [containerHeight, setContainerHeight] = useState();
+  const [containerHeight, setContainerHeight] = useState(0);
   const containerRef = useRef();
   const titleRef = useRef();
 
+  // resets the container height on screen resize
   useEffect(() => {
     const handleResize = () => {
       setContainerHeight(0);
@@ -44,7 +46,10 @@ const ContentCards = ({
 
   const results = content?.results
     .filter((item) => {
-      return item.backdrop_path !== null && item.release_date !== null;
+      return (
+        item.backdrop_path !== null &&
+        (item.release_date !== null || item.first_air_date)
+      );
     })
     .slice(0, 8);
 
@@ -56,7 +61,12 @@ const ContentCards = ({
         style={{ minHeight: containerHeight }}
         ref={containerRef}
       >
-        {!isPending && !isPlaceHolder ? (
+        {(isPlaceHolder || isPending) && (
+          <div className="content-loading">
+            <Loading />
+          </div>
+        )}
+        {isSuccess &&
           results.map((item) => {
             return (
               <ContentCard
@@ -65,22 +75,18 @@ const ContentCards = ({
                 key={item.id}
               />
             );
-          })
-        ) : (
-          <div className="content-loading">
-            <Loading />
-          </div>
-        )}
+          })}
       </div>
       <Pagination
         title={title}
         pageCount={pageCount}
         updatePageCount={updatePageCount}
         totalPages={totalPages}
-        isPlaceHolder={isPlaceHolder}
         updateContainerHeight={updateContainerHeight}
         containerRef={containerRef}
         titleRef={titleRef}
+        isPlaceHolder={isPlaceHolder}
+        isPending={isPending}
       />
     </>
   );
