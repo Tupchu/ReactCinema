@@ -14,7 +14,7 @@ const Pagination = ({
       <button
         onClick={() => {
           if (!isPlaceHolder) {
-            setContainerHeight(containerRef.current.clientHeight);
+            // setContainerHeight(containerRef.current.clientHeight);
             setPage((prevCount) => prevCount - 1);
             titleRef.current.scrollIntoView({
               behavior: "smooth",
@@ -31,7 +31,7 @@ const Pagination = ({
       <button
         onClick={() => {
           if (!isPlaceHolder) {
-            setContainerHeight(containerRef.current.clientHeight);
+            // setContainerHeight(containerRef.current.clientHeight);
             titleRef.current.scrollIntoView({
               behavior: "smooth",
               block: "start",
