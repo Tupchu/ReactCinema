@@ -56,7 +56,10 @@
 @media (min-width: 768px) {
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1350px) {
+  .content-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
   .content-title {
     max-width: 20ch;
   }
