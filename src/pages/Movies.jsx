@@ -4,6 +4,7 @@ import SearchBar from "../components/ui/SearchBar/SearchBar";
 import ContentCards from "../components/ui/ContentCards/ContentCards";
 import useDebounce from "../hooks/useDebounce";
 import useAxios from "../hooks/useAxios";
+import { calculatePagecount } from "../helpers/helpers";
 
 const Movies = () => {
   const [search, setSearch] = useState("");
@@ -18,6 +19,26 @@ const Movies = () => {
       setResultsPage(1);
     }
   }, [search]);
+
+  const updatePageCount = (page, operator) => {
+    switch (page.toLowerCase()) {
+      case "popular":
+        setPopularPage((prevCount) => calculatePagecount(prevCount, operator));
+        break;
+      case "upcoming":
+        setUpcomingPage((prevCount) => calculatePagecount(prevCount, operator));
+        break;
+      case "search results":
+        setResultsPage((prevCount) => calculatePagecount(prevCount, operator));
+        break;
+      default:
+        throw new Error("Invalid page");
+    }
+  };
+
+  const updateSearch = (search) => {
+    setSearch(search);
+  };
 
   // Popular movies
   const {
@@ -73,7 +94,7 @@ const Movies = () => {
     <div>
       <SearchBar
         search={search}
-        setSearch={setSearch}
+        updateSearch={updateSearch}
         placeholder="Search for movies"
       />
 
@@ -84,7 +105,7 @@ const Movies = () => {
             content={popular}
             contentType="movies"
             pageCount={popularPage}
-            setPage={setPopularPage}
+            updatePageCount={updatePageCount}
             totalPages={popular?.total_pages}
             isPlaceHolder={popularPlaceHolder}
             isPending={isPopularPending}
@@ -95,7 +116,7 @@ const Movies = () => {
             content={upcoming}
             contentType="movies"
             pageCount={upcomingPage}
-            setPage={setUpcomingPage}
+            updatePageCount={updatePageCount}
             totalPages={upcoming?.total_pages}
             isPlaceHolder={upcomingPlaceHolder}
             isPending={isUpcomingPending}
@@ -107,14 +128,12 @@ const Movies = () => {
           content={results}
           contentType="movies"
           pageCount={resultsPage}
-          setPage={setResultsPage}
+          updatePageCount={updatePageCount}
           totalPages={results?.total_pages}
           isPlaceHolder={resultsPlaceHolder}
           isPending={isResultsPending}
         />
       )}
-
-      {/* {(isPending || isSearchPending) && <h1>Loading...</h1>} */}
     </div>
   );
 };

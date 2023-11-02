@@ -4,11 +4,15 @@ import SearchBar from "../components/ui/SearchBar/SearchBar";
 const Bookmarked = () => {
   const [search, setSearch] = useState("");
 
+  const updateSearch = (search) => {
+    setSearch(search);
+  };
+
   return (
     <div>
       <SearchBar
         search={search}
-        setSearch={setSearch}
+        updateSearch={updateSearch}
         placeholder="Search bookmarks"
       />
     </div>

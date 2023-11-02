@@ -1,7 +1,7 @@
 import searchIcon from "../../../assets/icon-search.svg";
 import "./searchbar.css";
 
-const SearchBar = ({ search, setSearch, placeholder }) => {
+const SearchBar = ({ search, updateSearch, placeholder }) => {
   return (
     <div className="search">
       <img src={searchIcon} alt="Search icon" />
@@ -12,13 +12,13 @@ const SearchBar = ({ search, setSearch, placeholder }) => {
         placeholder={placeholder}
         value={search}
         onChange={(e) => {
-          setSearch(e.target.value);
+          updateSearch(e.target.value);
         }}
         className="search-bar"
       />
       <div
         className={search ? "close-icon" : "hidden"}
-        onClick={() => setSearch("")}
+        onClick={() => updateSearch("")}
       ></div>
     </div>
   );

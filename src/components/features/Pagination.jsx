@@ -1,11 +1,12 @@
 import "./features.css";
 
 const Pagination = ({
+  title,
   pageCount,
-  setPage,
+  updatePageCount,
   totalPages,
   isPlaceHolder,
-  setContainerHeight,
+  updateContainerHeight,
   containerRef,
   titleRef,
 }) => {
@@ -14,8 +15,8 @@ const Pagination = ({
       <button
         onClick={() => {
           if (!isPlaceHolder) {
-            setContainerHeight(containerRef.current.clientHeight);
-            setPage((prevCount) => prevCount - 1);
+            updateContainerHeight(containerRef.current.clientHeight);
+            updatePageCount(title, "-");
             titleRef.current.scrollIntoView({
               behavior: "smooth",
               block: "start",
@@ -31,13 +32,13 @@ const Pagination = ({
       <button
         onClick={() => {
           if (!isPlaceHolder) {
-            setContainerHeight(containerRef.current.clientHeight);
+            updateContainerHeight(containerRef.current.clientHeight);
+            updatePageCount(title, "+");
             titleRef.current.scrollIntoView({
               behavior: "smooth",
               block: "start",
               inline: "start",
             });
-            setPage((prevCount) => prevCount + 1);
           }
         }}
         disabled={pageCount === totalPages}

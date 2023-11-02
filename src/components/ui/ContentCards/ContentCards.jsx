@@ -17,7 +17,7 @@ const ContentCards = ({
   content,
   contentType,
   pageCount,
-  setPage,
+  updatePageCount,
   totalPages,
   isPlaceHolder,
   isPending,
@@ -25,10 +25,6 @@ const ContentCards = ({
   const [containerHeight, setContainerHeight] = useState();
   const containerRef = useRef();
   const titleRef = useRef();
-
-  // useEffect(() => {
-  //   setContainerHeight(0);
-  // }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -41,6 +37,10 @@ const ContentCards = ({
       window.removeEventListener("resize", handleResize);
     };
   }, [setContainerHeight]);
+
+  const updateContainerHeight = (height) => {
+    setContainerHeight(height);
+  };
 
   const results = content?.results
     .filter((item) => {
@@ -73,11 +73,12 @@ const ContentCards = ({
         )}
       </div>
       <Pagination
+        title={title}
         pageCount={pageCount}
-        setPage={setPage}
+        updatePageCount={updatePageCount}
         totalPages={totalPages}
         isPlaceHolder={isPlaceHolder}
-        setContainerHeight={setContainerHeight}
+        updateContainerHeight={updateContainerHeight}
         containerRef={containerRef}
         titleRef={titleRef}
       />
@@ -86,21 +87,3 @@ const ContentCards = ({
 };
 
 export default ContentCards;
-
-// {!isPending && !isPlaceHolder ? (
-//   <div className="content-grid" ref={contentContainer}>
-//     {results.map((item) => {
-//       return (
-//         <ContentCard
-//           item={item}
-//           contentType={contentType}
-//           key={item.id}
-//         />
-//       );
-//     })}
-//   </div>
-// ) : (
-//   <div className="content-loading">
-//     <Loading />
-//   </div>
-// )}
