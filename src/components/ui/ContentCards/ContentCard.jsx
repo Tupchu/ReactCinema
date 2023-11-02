@@ -1,11 +1,13 @@
 import movieIcon from "../../../assets/icon-nav-movies.svg";
 import tvIcon from "../../../assets/icon-nav-tv-series.svg";
 import Bookmark from "../../features/Bookmark";
+import { useState } from "react";
 import "./card.css";
 
 const basePath = "https://image.tmdb.org/t/p/w780";
 
 const ContentCard = ({ item, contentType }, key) => {
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const date = new Date(item.release_date);
 
   return (
@@ -15,6 +17,8 @@ const ContentCard = ({ item, contentType }, key) => {
         alt={item.title}
         title={item.title}
         className="content-img"
+        onLoad={() => setIsImageLoaded(true)}
+        style={{ display: isImageLoaded ? "initial" : "none" }}
       />
 
       <Bookmark contentType={contentType} item={item} />
