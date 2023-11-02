@@ -26,9 +26,9 @@ const ContentCards = ({
   const containerRef = useRef();
   const titleRef = useRef();
 
-  useEffect(() => {
-    setContainerHeight(0);
-  }, []);
+  // useEffect(() => {
+  //   setContainerHeight(0);
+  // }, []);
 
   useEffect(() => {
     const handleResize = () => {
