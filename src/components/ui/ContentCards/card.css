@@ -3,7 +3,8 @@
   place-items: center;
   width: 100%;
   gap: var(--spacing-xs);
-  grid-template-columns: 1fr;
+  /* grid-template-columns: 1fr; */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   margin: var(--spacing-sm) 0;
   position: relative;
 }
@@ -38,7 +39,7 @@
 
 .content-title {
   margin-top: 0.25rem;
-  max-width: 25ch;
+  max-width: 20ch;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -56,13 +57,13 @@
 
 @media (min-width: 768px) {
   .content-grid {
-    grid-template-columns: 1fr 1fr;
+    /* grid-template-columns: 1fr 1fr; */
   }
 }
 
 @media (min-width: 1200px) {
   .content-grid {
-    grid-template-columns: repeat(4, 1fr);
+    /* grid-template-columns: repeat(4, 1fr); */
   }
 
   .content-title {

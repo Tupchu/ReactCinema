@@ -30,17 +30,17 @@ const ContentCards = ({
   //   setContainerHeight(0);
   // }, []);
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     setContainerHeight(0);
-  //   };
+  useEffect(() => {
+    const handleResize = () => {
+      setContainerHeight(0);
+    };
 
-  //   window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize);
 
-  //   return () => {
-  //     window.removeEventListener("resize", handleResize);
-  //   };
-  // }, [setContainerHeight]);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [setContainerHeight]);
 
   const results = content?.results
     .filter((item) => {
