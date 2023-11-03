@@ -51,7 +51,6 @@ const Movies = () => {
     queryKey: ["movies", "popular", popularPage],
     queryFn: () =>
       useAxios("https://api.themoviedb.org/3/movie/popular", "", popularPage),
-    staleTime: 60000,
     keepPreviousData: true,
     placeholderData: keepPreviousData,
   });
@@ -67,7 +66,6 @@ const Movies = () => {
     queryKey: ["movies", "upcoming", upcomingPage],
     queryFn: () =>
       useAxios("https://api.themoviedb.org/3/movie/upcoming", "", upcomingPage),
-    staleTime: 60000,
     keepPreviousData: true,
     placeholderData: keepPreviousData,
   });
@@ -87,7 +85,6 @@ const Movies = () => {
         debouncedSearch,
         resultsPage
       ),
-    staleTime: 60000,
     keepPreviousData: true,
     placeholderData: keepPreviousData,
   });

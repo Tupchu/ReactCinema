@@ -51,7 +51,6 @@ const Home = () => {
         "",
         trendingPage
       ),
-    staleTime: 60000,
     keepPreviousData: true,
     placeholderData: keepPreviousData,
   });
@@ -71,7 +70,6 @@ const Home = () => {
         debouncedSearch,
         resultsPage
       ),
-    staleTime: 60000,
     keepPreviousData: true,
     placeholderData: keepPreviousData,
   });

@@ -39,6 +39,8 @@
   .nav-container {
     padding: var(--spacing-md) 0 var(--spacing-md) var(--spacing-md);
     height: 100vh;
+    position: sticky;
+    top: 0;
   }
 
   .main-nav {

@@ -50,7 +50,6 @@ const Television = () => {
     queryKey: ["TV", "popular", popularPage],
     queryFn: () =>
       useAxios("https://api.themoviedb.org/3/tv/popular", "", popularPage),
-    staleTime: 60000,
     keepPreviousData: true,
     placeholderData: keepPreviousData,
   });
@@ -66,7 +65,6 @@ const Television = () => {
     queryKey: ["TV", "airing", airingPage],
     queryFn: () =>
       useAxios("https://api.themoviedb.org/3/tv/airing_today", "", airingPage),
-    staleTime: 60000,
     keepPreviousData: true,
     placeholderData: keepPreviousData,
   });

@@ -11,7 +11,9 @@ const Bookmark = ({ contentType, item }) => {
   return (
     <div
       className="bookmark"
-      onClick={() => setBookmarked((prevValue) => !prevValue)}
+      onClick={() => {
+        setBookmarked((prevValue) => !prevValue);
+      }}
     >
       <img
         src={bookmarked ? bookmarkFull : bookmarkEmpty}
