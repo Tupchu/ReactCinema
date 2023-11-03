@@ -8,3 +8,9 @@ export const calculatePagecount = (prev, operator) => {
       throw new Error("Invalid operator");
   }
 };
+
+export const contentTypes = Object.freeze({
+  movie: "movie",
+  television: "tv",
+  all: "all",
+});

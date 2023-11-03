@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { calculatePagecount } from "../helpers/helpers";
+import { calculatePagecount, contentTypes } from "../helpers/helpers";
 import ContentCards from "../components/ui/ContentCards/ContentCards";
 import useDebounce from "../hooks/useDebounce";
 import useAxios from "../hooks/useAxios";
@@ -47,7 +47,7 @@ const Television = () => {
     error: popularError,
     isPlaceholderData: popularPlaceHolder,
   } = useQuery({
-    queryKey: ["popularTV", popularPage],
+    queryKey: ["TV", "popular", popularPage],
     queryFn: () =>
       useAxios("https://api.themoviedb.org/3/tv/popular", "", popularPage),
     staleTime: 60000,
@@ -63,7 +63,7 @@ const Television = () => {
     error: airingError,
     isPlaceholderData: airingPlaceHolder,
   } = useQuery({
-    queryKey: ["airingTV", airingPage],
+    queryKey: ["TV", "airing", airingPage],
     queryFn: () =>
       useAxios("https://api.themoviedb.org/3/tv/airing_today", "", airingPage),
     staleTime: 60000,
@@ -79,7 +79,7 @@ const Television = () => {
     error: resultsError,
     isPlaceholderData: resultsPlaceHolder,
   } = useQuery({
-    queryKey: ["resultsTV", debouncedSearch, resultsPage],
+    queryKey: ["TV", debouncedSearch, resultsPage],
     queryFn: () =>
       useAxios(
         "https://api.themoviedb.org/3/search/tv",
@@ -108,7 +108,7 @@ const Television = () => {
           <ContentCards
             title="Popular"
             content={popular}
-            contentType="tv"
+            contentType={contentTypes.television}
             pageCount={popularPage}
             updatePageCount={updatePageCount}
             totalPages={popular?.total_pages}
@@ -120,7 +120,7 @@ const Television = () => {
           <ContentCards
             title="Airing Today"
             content={airing}
-            contentType="tv"
+            contentType={contentTypes.television}
             pageCount={airingPage}
             updatePageCount={updatePageCount}
             totalPages={airing?.total_pages}
@@ -133,7 +133,7 @@ const Television = () => {
         <ContentCards
           title="Search results"
           content={results}
-          contentType="tv"
+          contentType={contentTypes.television}
           pageCount={resultsPage}
           updatePageCount={updatePageCount}
           totalPages={results?.total_pages}

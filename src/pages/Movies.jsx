@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { calculatePagecount, contentTypes } from "../helpers/helpers";
 import SearchBar from "../components/ui/SearchBar/SearchBar";
 import ContentCards from "../components/ui/ContentCards/ContentCards";
 import useDebounce from "../hooks/useDebounce";
 import useAxios from "../hooks/useAxios";
-import { calculatePagecount } from "../helpers/helpers";
 
 const Movies = () => {
   const [search, setSearch] = useState("");
@@ -48,7 +48,7 @@ const Movies = () => {
     error: popularError,
     isPlaceholderData: popularPlaceHolder,
   } = useQuery({
-    queryKey: ["popular", popularPage],
+    queryKey: ["movies", "popular", popularPage],
     queryFn: () =>
       useAxios("https://api.themoviedb.org/3/movie/popular", "", popularPage),
     staleTime: 60000,
@@ -64,7 +64,7 @@ const Movies = () => {
     isSuccess: isUpcomingSuccess,
     error: upcomingError,
   } = useQuery({
-    queryKey: ["upcoming", upcomingPage],
+    queryKey: ["movies", "upcoming", upcomingPage],
     queryFn: () =>
       useAxios("https://api.themoviedb.org/3/movie/upcoming", "", upcomingPage),
     staleTime: 60000,
@@ -80,7 +80,7 @@ const Movies = () => {
     error: resultsError,
     isPlaceholderData: resultsPlaceHolder,
   } = useQuery({
-    queryKey: ["results", debouncedSearch, resultsPage],
+    queryKey: ["movies", debouncedSearch, resultsPage],
     queryFn: () =>
       useAxios(
         "https://api.themoviedb.org/3/search/movie",
@@ -109,7 +109,7 @@ const Movies = () => {
           <ContentCards
             title="Popular"
             content={popular}
-            contentType="movies"
+            contentType={contentTypes.movie}
             pageCount={popularPage}
             updatePageCount={updatePageCount}
             totalPages={popular?.total_pages}
@@ -121,7 +121,7 @@ const Movies = () => {
           <ContentCards
             title="Upcoming"
             content={upcoming}
-            contentType="movies"
+            contentType={contentTypes.movie}
             pageCount={upcomingPage}
             updatePageCount={updatePageCount}
             totalPages={upcoming?.total_pages}
@@ -134,7 +134,7 @@ const Movies = () => {
         <ContentCards
           title="Search results"
           content={results}
-          contentType="movies"
+          contentType={contentTypes.movie}
           pageCount={resultsPage}
           updatePageCount={updatePageCount}
           totalPages={results?.total_pages}
