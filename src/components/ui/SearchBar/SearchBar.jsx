@@ -1,3 +1,4 @@
+import { memo } from "react";
 import searchIcon from "../../../assets/icon-search.svg";
 import "./searchbar.css";
 
@@ -24,4 +25,4 @@ const SearchBar = ({ search, updateSearch, placeholder }) => {
   );
 };
 
-export default SearchBar;
+export default memo(SearchBar);

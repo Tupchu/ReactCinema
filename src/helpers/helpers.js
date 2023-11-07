@@ -14,3 +14,14 @@ export const contentTypes = Object.freeze({
   television: "tv",
   all: "all",
 });
+
+export const filterContent = (results) => {
+  return results
+    ?.filter((item) => {
+      return (
+        item.backdrop_path !== null &&
+        (item.release_date !== null || item.first_air_date)
+      );
+    })
+    .slice(0, 8);
+};

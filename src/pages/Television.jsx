@@ -1,6 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { calculatePagecount, contentTypes } from "../helpers/helpers";
+import {
+  calculatePagecount,
+  contentTypes,
+  filterContent,
+} from "../helpers/helpers";
 import ContentCards from "../components/ui/ContentCards/ContentCards";
 import useDebounce from "../hooks/useDebounce";
 import useAxios from "../hooks/useAxios";
@@ -35,9 +39,12 @@ const Television = () => {
     }
   };
 
-  const updateSearch = (search) => {
-    setSearch(search);
-  };
+  const updateSearch = useCallback(
+    (search) => {
+      setSearch(search);
+    },
+    [search]
+  );
 
   // Popular TV
   const {
@@ -105,7 +112,7 @@ const Television = () => {
         <>
           <ContentCards
             title="Popular"
-            content={popular}
+            content={filterContent(popular?.results)}
             contentType={contentTypes.television}
             pageCount={popularPage}
             updatePageCount={updatePageCount}
@@ -117,7 +124,7 @@ const Television = () => {
 
           <ContentCards
             title="Airing Today"
-            content={airing}
+            content={filterContent(airing?.results)}
             contentType={contentTypes.television}
             pageCount={airingPage}
             updatePageCount={updatePageCount}
@@ -130,7 +137,7 @@ const Television = () => {
       ) : (
         <ContentCards
           title="Search results"
-          content={results}
+          content={filterContent(results?.results)}
           contentType={contentTypes.television}
           pageCount={resultsPage}
           updatePageCount={updatePageCount}

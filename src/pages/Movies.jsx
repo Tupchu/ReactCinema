@@ -1,6 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { calculatePagecount, contentTypes } from "../helpers/helpers";
+import {
+  calculatePagecount,
+  contentTypes,
+  filterContent,
+} from "../helpers/helpers";
 import SearchBar from "../components/ui/SearchBar/SearchBar";
 import ContentCards from "../components/ui/ContentCards/ContentCards";
 import useDebounce from "../hooks/useDebounce";
@@ -36,9 +40,12 @@ const Movies = () => {
     }
   };
 
-  const updateSearch = (search) => {
-    setSearch(search);
-  };
+  const updateSearch = useCallback(
+    (search) => {
+      setSearch(search);
+    },
+    [search]
+  );
 
   // Popular movies
   const {
@@ -105,7 +112,7 @@ const Movies = () => {
         <>
           <ContentCards
             title="Popular"
-            content={popular}
+            content={filterContent(popular?.results)}
             contentType={contentTypes.movie}
             pageCount={popularPage}
             updatePageCount={updatePageCount}
@@ -117,7 +124,7 @@ const Movies = () => {
 
           <ContentCards
             title="Upcoming"
-            content={upcoming}
+            content={filterContent(upcoming?.results)}
             contentType={contentTypes.movie}
             pageCount={upcomingPage}
             updatePageCount={updatePageCount}
@@ -130,7 +137,7 @@ const Movies = () => {
       ) : (
         <ContentCards
           title="Search results"
-          content={results}
+          content={filterContent(results?.results)}
           contentType={contentTypes.movie}
           pageCount={resultsPage}
           updatePageCount={updatePageCount}

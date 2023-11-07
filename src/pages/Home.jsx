@@ -1,6 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { calculatePagecount, contentTypes } from "../helpers/helpers";
+import {
+  calculatePagecount,
+  contentTypes,
+  filterContent,
+} from "../helpers/helpers";
 import useDebounce from "../hooks/useDebounce";
 import ContentCards from "../components/ui/ContentCards/ContentCards";
 import useAxios from "../hooks/useAxios";
@@ -19,9 +23,12 @@ const Home = () => {
     }
   }, [search]);
 
-  const updateSearch = (search) => {
-    setSearch(search);
-  };
+  const updateSearch = useCallback(
+    (search) => {
+      setSearch(search);
+    },
+    [search]
+  );
 
   const updatePageCount = (page, operator) => {
     switch (page.toLowerCase()) {
@@ -86,7 +93,7 @@ const Home = () => {
         <>
           <ContentCards
             title="Trending"
-            content={trending}
+            content={filterContent(trending?.results)}
             contentType={contentTypes.all}
             pageCount={trendingPage}
             updatePageCount={updatePageCount}
@@ -102,7 +109,7 @@ const Home = () => {
       ) : (
         <ContentCards
           title="Search results"
-          content={results}
+          content={filterContent(results?.results)}
           contentType={contentTypes.all}
           pageCount={resultsPage}
           updatePageCount={updatePageCount}

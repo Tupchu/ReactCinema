@@ -24,8 +24,8 @@ const ContentCards = ({
   isSuccess,
 }) => {
   const [containerHeight, setContainerHeight] = useState(0);
-  const containerRef = useRef();
-  const titleRef = useRef();
+  const containerRef = useRef(null);
+  const titleRef = useRef(null);
 
   // resets the container height on screen resize
   useEffect(() => {
@@ -44,15 +44,6 @@ const ContentCards = ({
     setContainerHeight(height);
   };
 
-  const results = content?.results
-    .filter((item) => {
-      return (
-        item.backdrop_path !== null &&
-        (item.release_date !== null || item.first_air_date)
-      );
-    })
-    .slice(0, 8);
-
   return (
     <>
       <h2 ref={titleRef}>{title}</h2>
@@ -67,7 +58,7 @@ const ContentCards = ({
           </div>
         )}
         {isSuccess &&
-          results.map((item) => {
+          content?.map((item) => {
             return (
               <ContentCard
                 item={item}
