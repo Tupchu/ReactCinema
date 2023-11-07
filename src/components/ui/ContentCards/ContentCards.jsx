@@ -1,8 +1,10 @@
 import Pagination from "../../features/Pagination";
-import ContentCard from "./ContentCard";
 import Loading from "../Loading";
 import "./card.css";
 import { useEffect, useRef, useState } from "react";
+import { contentTypes } from "../../../helpers/helpers";
+import MovieCard from "./MovieCard";
+import TVCard from "./TVCard";
 
 /* 
 Responsible for content cards and the title of the content
@@ -57,16 +59,31 @@ const ContentCards = ({
             <Loading />
           </div>
         )}
-        {isSuccess &&
+        {(isSuccess &&
+          contentType === contentTypes.all &&
           content?.map((item) => {
-            return (
-              <ContentCard
-                item={item}
-                contentType={contentType}
-                key={item.id}
-              />
+            return item.media_type === contentTypes.television ? (
+              <TVCard item={item} contentType={contentType} key={item.id} />
+            ) : (
+              <MovieCard item={item} contentType={contentType} key={item.id} />
             );
-          })}
+          })) ||
+          (contentType === contentTypes.movie &&
+            content?.map((item) => {
+              return (
+                <MovieCard
+                  item={item}
+                  contentType={contentType}
+                  key={item.id}
+                />
+              );
+            })) ||
+          (contentType === contentTypes.television &&
+            content?.map((item) => {
+              return (
+                <TVCard item={item} contentType={contentType} key={item.id} />
+              );
+            }))}
       </div>
       <Pagination
         title={title}
