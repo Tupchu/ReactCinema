@@ -15,7 +15,7 @@ const Pagination = ({
   const handlePaginationClick = (operator) => {
     if (!isPlaceHolder && !isPending) {
       updateContainerHeight(containerRef.current.clientHeight);
-      updatePageCount(title, operator);
+      updatePageCount(operator);
       titleRef.current.scrollIntoView({
         behavior: "smooth",
         block: "start",

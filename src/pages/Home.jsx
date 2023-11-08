@@ -1,25 +1,45 @@
 import { useState, useEffect, useCallback } from "react";
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import {
-  calculatePagecount,
-  contentTypes,
-  filterContent,
-} from "../helpers/helpers";
+import { contentTypes, filterContent } from "../helpers/helpers";
 import useDebounce from "../hooks/useDebounce";
 import ContentCards from "../components/ui/ContentCards/ContentCards";
-import useAxios from "../hooks/useAxios";
 import SearchBar from "../components/ui/SearchBar/SearchBar";
+import useQueryResults from "../hooks/useQueryResults";
 
 const Home = () => {
   const [search, setSearch] = useState("");
-  const [trendingPage, setTrendingPage] = useState(1);
-  const [resultsPage, setResultsPage] = useState(1);
-
   const debouncedSearch = useDebounce(search, 1000);
+
+  const {
+    page: trendingPage,
+    updatePageCount: updateTrendingPageCount,
+    data: trendingData,
+    error: trendingError,
+    isPending: isTrendingPending,
+    isSuccess: isTrendingSuccess,
+    isPlaceholderData: isTrendingPlaceholder,
+  } = useQueryResults(
+    "trending",
+    "https://api.themoviedb.org/3/trending/all/day"
+  );
+
+  const {
+    page: searchPage,
+    updatePageCount: updateSearchPageCount,
+    resetPageCount,
+    data: searchData,
+    error: searchError,
+    isPending: isSearchPending,
+    isSuccess: isSearchSuccess,
+    isPlaceholderData: isSearchPlaceholder,
+  } = useQueryResults(
+    "search",
+    "https://api.themoviedb.org/3/search/multi",
+    debouncedSearch
+  );
 
   useEffect(() => {
     if (search === "") {
-      setResultsPage(1);
+      resetPageCount();
     }
   }, [search]);
 
@@ -29,57 +49,6 @@ const Home = () => {
     },
     [search]
   );
-
-  const updatePageCount = (page, operator) => {
-    switch (page.toLowerCase()) {
-      case "trending":
-        setTrendingPage((prevCount) => calculatePagecount(prevCount, operator));
-        break;
-      case "search results":
-        setResultsPage((prevCount) => calculatePagecount(prevCount, operator));
-        break;
-      default:
-        throw new Error("Invalid page");
-    }
-  };
-
-  // Trending TV & Movies
-  const {
-    data: trending,
-    isPending: isTrendingPending,
-    isSuccess: isTrendingSuccess,
-    error: trendingError,
-    isPlaceholderData: trendingPlaceHolder,
-  } = useQuery({
-    queryKey: ["trending", trendingPage],
-    queryFn: () =>
-      useAxios(
-        "https://api.themoviedb.org/3/trending/all/day",
-        "",
-        trendingPage
-      ),
-    keepPreviousData: true,
-    placeholderData: keepPreviousData,
-  });
-
-  // Search results
-  const {
-    data: results,
-    isPending: isResultsPending,
-    isSuccess: isResultsSuccess,
-    error: resultsError,
-    isPlaceholderData: resultsPlaceHolder,
-  } = useQuery({
-    queryKey: ["all", debouncedSearch, resultsPage],
-    queryFn: () =>
-      useAxios(
-        "https://api.themoviedb.org/3/search/multi",
-        debouncedSearch,
-        resultsPage
-      ),
-    keepPreviousData: true,
-    placeholderData: keepPreviousData,
-  });
 
   return (
     <div>
@@ -93,12 +62,12 @@ const Home = () => {
         <>
           <ContentCards
             title="Trending"
-            content={filterContent(trending?.results)}
+            content={filterContent(trendingData?.results)}
             contentType={contentTypes.all}
             pageCount={trendingPage}
-            updatePageCount={updatePageCount}
-            totalPages={trending?.total_pages}
-            isPlaceHolder={trendingPlaceHolder}
+            updatePageCount={updateTrendingPageCount}
+            totalPages={trendingData?.total_pages}
+            isPlaceHolder={isTrendingPlaceholder}
             isPending={isTrendingPending}
             isSuccess={isTrendingSuccess}
           />
@@ -109,14 +78,14 @@ const Home = () => {
       ) : (
         <ContentCards
           title="Search results"
-          content={filterContent(results?.results)}
+          content={filterContent(searchData?.results)}
           contentType={contentTypes.all}
-          pageCount={resultsPage}
-          updatePageCount={updatePageCount}
-          totalPages={results?.total_pages}
-          isPlaceHolder={resultsPlaceHolder}
-          isPending={isResultsPending}
-          isSuccess={isResultsSuccess}
+          pageCount={searchPage}
+          updatePageCount={updateSearchPageCount}
+          totalPages={searchData?.total_pages}
+          isPlaceHolder={isSearchPlaceholder}
+          isPending={isSearchPending}
+          isSuccess={isSearchSuccess}
         />
       )}
     </div>

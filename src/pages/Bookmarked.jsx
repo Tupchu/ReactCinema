@@ -1,32 +1,32 @@
 import { useCallback, useState } from "react";
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { useLocalStorage } from "../hooks/useLocalStorage";
-import { calculatePagecount, contentTypes } from "../helpers/helpers";
+import { contentTypes } from "../helpers/helpers";
 import SearchBar from "../components/ui/SearchBar/SearchBar";
 import ContentCards from "../components/ui/ContentCards/ContentCards";
-import { usePaginationState } from "../hooks/usePaginationState";
+import { useCustomPagination } from "../hooks/useCustomPagination";
 
 const Bookmarked = () => {
   const [search, setSearch] = useState("");
   const {
     page: moviePage,
-    setPage: setMoviePage,
     totalPages: totalMoviePages,
-    setTotalPages: setTotalMoviePages,
-    startIndex: startMovieIndex,
-    setStartIndex: setStartMovieIndex,
-  } = usePaginationState();
+    data: movieData,
+    error: movieError,
+    isPending: isMoviePending,
+    isSuccess: isMovieSuccess,
+    isPlaceholderData: isMoviePlaceholder,
+    updatePageCount: updateMoviePageCount,
+  } = useCustomPagination(contentTypes.movie);
 
   const {
     page: televisionPage,
-    setPage: setTelevisionPage,
     totalPages: totalTelevisionPages,
-    setTotalPages: setTotalTelevisionPages,
-    startIndex: startTelevisionIndex,
-    setStartIndex: setStartTelevisionIndex,
-  } = usePaginationState();
-
-  const resultsPerPage = 8;
+    data: televisionData,
+    error: televisionError,
+    isPending: isTelevisionPending,
+    isSuccess: isTelevisionSuccess,
+    isPlaceholderData: isTelevisionPlaceholder,
+    updatePageCount: updateTelevisionPageCount,
+  } = useCustomPagination(contentTypes.television);
 
   const updateSearch = useCallback(
     (search) => {
@@ -34,65 +34,6 @@ const Bookmarked = () => {
     },
     [search]
   );
-
-  const updatePageCount = (page, operator) => {
-    switch (page.toLowerCase()) {
-      case "movies":
-        setMoviePage((prevCount) => calculatePagecount(prevCount, operator));
-        setStartMovieIndex((prevInd) =>
-          operator === "-" ? prevInd - resultsPerPage : prevInd + resultsPerPage
-        );
-        break;
-      case "tv":
-        setTelevisionPage((prevCount) =>
-          calculatePagecount(prevCount, operator)
-        );
-        setStartTelevisionIndex((prevInd) =>
-          operator === "-" ? prevInd - resultsPerPage : prevInd + resultsPerPage
-        );
-        break;
-      default:
-        throw new Error("Invalid page");
-    }
-  };
-
-  const {
-    data: movies,
-    isPending: moviesPending,
-    isSuccess: moviesSuccess,
-    isPlaceHolder: moviesPlaceHolder,
-  } = useQuery({
-    queryKey: ["bookmarked", "movies", moviePage],
-    queryFn: () => {
-      const { getItems } = useLocalStorage("movie");
-      setTotalMoviePages(Math.ceil(getItems().length / resultsPerPage));
-      return getItems().slice(
-        startMovieIndex,
-        startMovieIndex + resultsPerPage
-      );
-    },
-    keepPreviousData: true,
-    placeholderData: keepPreviousData,
-  });
-
-  const {
-    data: tv,
-    isPending: tvPending,
-    isSuccess: tvSuccess,
-    isPlaceholderData: tvPlaceHolder,
-  } = useQuery({
-    queryKey: ["bookmarked", "tv", televisionPage],
-    queryFn: () => {
-      const { getItems } = useLocalStorage("tv");
-      setTotalTelevisionPages(Math.ceil(getItems().length / resultsPerPage));
-      return getItems().slice(
-        startTelevisionIndex,
-        startTelevisionIndex + resultsPerPage
-      );
-    },
-    keepPreviousData: true,
-    placeholderData: keepPreviousData,
-  });
 
   return (
     <div>
@@ -104,26 +45,26 @@ const Bookmarked = () => {
 
       <ContentCards
         title="Movies"
-        content={movies}
+        content={movieData}
         contentType={contentTypes.movie}
         pageCount={moviePage}
-        updatePageCount={updatePageCount}
+        updatePageCount={updateMoviePageCount}
         totalPages={totalMoviePages}
-        isPlaceHolder={moviesPlaceHolder}
-        isPending={moviesPending}
-        isSuccess={moviesSuccess}
+        isPlaceHolder={isMoviePlaceholder}
+        isPending={isMoviePending}
+        isSuccess={isMovieSuccess}
       />
 
       <ContentCards
         title="TV"
-        content={tv}
+        content={televisionData}
         contentType={contentTypes.television}
         pageCount={televisionPage}
-        updatePageCount={updatePageCount}
+        updatePageCount={updateTelevisionPageCount}
         totalPages={totalTelevisionPages}
-        isPlaceHolder={tvPlaceHolder}
-        isPending={tvPending}
-        isSuccess={tvSuccess}
+        isPlaceHolder={isTelevisionPlaceholder}
+        isPending={isTelevisionPending}
+        isSuccess={isTelevisionSuccess}
       />
     </div>
   );
