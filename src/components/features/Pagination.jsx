@@ -12,37 +12,29 @@ const Pagination = ({
   isPlaceHolder,
   isPending,
 }) => {
+  const handlePaginationClick = (operator) => {
+    if (!isPlaceHolder && !isPending) {
+      updateContainerHeight(containerRef.current.clientHeight);
+      updatePageCount(title, operator);
+      titleRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "start",
+      });
+    }
+  };
+
   return (
     <div className="pagination">
       <button
-        onClick={() => {
-          if (!isPlaceHolder && !isPending) {
-            updateContainerHeight(containerRef.current.clientHeight);
-            updatePageCount(title, "-");
-            titleRef.current.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-              inline: "start",
-            });
-          }
-        }}
+        onClick={() => handlePaginationClick("-")}
         disabled={pageCount === 1}
         className="pagination-btn"
       >
         Prev
       </button>
       <button
-        onClick={() => {
-          if (!isPlaceHolder && !isPending) {
-            updateContainerHeight(containerRef.current.clientHeight);
-            updatePageCount(title, "+");
-            titleRef.current.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-              inline: "start",
-            });
-          }
-        }}
+        onClick={() => handlePaginationClick("+")}
         disabled={pageCount === totalPages}
         className="pagination-btn"
       >
