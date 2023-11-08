@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { calculatePagecount } from "../helpers/helpers";
+import { calculatePagecount, contentTypes } from "../helpers/helpers";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useLocalStorage } from "./useLocalStorage";
 
@@ -21,8 +21,20 @@ export const useCustomPagination = (key, search = "") => {
     queryKey: search ? [key, search, page] : [key, page],
     queryFn: () => {
       const { getItems } = useLocalStorage(key); // movie or tv
-      setTotalPages(Math.ceil(getItems().length / resultsPerPage));
-      return getItems().slice(startIndex, startIndex + resultsPerPage);
+      const items = getItems();
+
+      if (search !== "") {
+        const filtered = items.filter((item) => {
+          return key === contentTypes.television
+            ? item.name.includes(search)
+            : item.title.includes(search);
+        });
+        setTotalPages(Math.ceil(filtered.length / resultsPerPage));
+        return filtered.slice(startIndex, startIndex + resultsPerPage);
+      } else {
+        setTotalPages(Math.ceil(items.length / resultsPerPage));
+        return items.slice(startIndex, startIndex + resultsPerPage);
+      }
     },
     keepPreviousData: true,
     placeholderData: keepPreviousData,
