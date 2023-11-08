@@ -11,7 +11,15 @@ const Pagination = ({
   titleRef,
   isPlaceHolder,
   isPending,
+  contentLength,
 }) => {
+  useEffect(() => {
+    // if a user removes all currently visible items but there is previous content decrement page count
+    if (contentLength === 0 && pageCount !== 1) {
+      updatePageCount("-");
+    }
+  }, [contentLength]);
+
   const handlePaginationClick = (operator) => {
     if (!isPlaceHolder && !isPending) {
       updateContainerHeight(containerRef.current.clientHeight);
@@ -35,7 +43,7 @@ const Pagination = ({
       </button>
       <button
         onClick={() => handlePaginationClick("+")}
-        disabled={pageCount === totalPages}
+        disabled={pageCount === totalPages || contentLength === 0}
         className="pagination-btn"
       >
         Next

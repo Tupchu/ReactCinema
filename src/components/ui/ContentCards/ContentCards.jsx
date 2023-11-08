@@ -61,6 +61,7 @@ const ContentCards = ({
   return (
     <>
       <h2 ref={titleRef}>{title}</h2>
+      {content?.length === 0 && <p>No results</p>}
       <div
         className="content-grid"
         style={{ minHeight: containerHeight }}
@@ -97,6 +98,7 @@ const ContentCards = ({
               );
             }))}
       </div>
+
       <Pagination
         title={title}
         pageCount={pageCount}
@@ -107,6 +109,7 @@ const ContentCards = ({
         titleRef={titleRef}
         isPlaceHolder={isPlaceHolder}
         isPending={isPending}
+        contentLength={content?.length}
       />
     </>
   );
