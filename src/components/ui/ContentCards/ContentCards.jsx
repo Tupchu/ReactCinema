@@ -78,7 +78,13 @@ const ContentCards = ({
             return item.media_type === contentTypes.television ? (
               <TVCard item={item} contentType={contentType} key={item.id} />
             ) : (
-              <MovieCard item={item} contentType={contentType} key={item.id} />
+              item.media_type === contentTypes.movie && (
+                <MovieCard
+                  item={item}
+                  contentType={contentType}
+                  key={item.id}
+                />
+              )
             );
           })) ||
           (contentType === contentTypes.movie &&
