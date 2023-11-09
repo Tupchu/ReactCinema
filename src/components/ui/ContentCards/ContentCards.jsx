@@ -42,7 +42,7 @@ const ContentCards = ({
     };
   }, [setContainerHeight]);
 
-  // resets the min height on the content container when the length is different
+  // resets the min height on the content container when the length is different than previous
   useEffect(() => {
     const length = localStorage.getItem(`${title}-${contentType}-length`);
 

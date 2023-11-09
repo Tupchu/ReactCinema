@@ -10,14 +10,17 @@ const Movies = () => {
   const debouncedSearch = useDebounce(search, 1000);
 
   const {
-    page: popularPage,
-    updatePageCount: updatePopularPageCount,
-    data: popularData,
-    error: popularError,
-    isPending: isPopularPending,
-    isSuccess: isPopularSuccess,
-    isPlaceholderData: isPopularPlaceholder,
-  } = useQueryResults("popular", "https://api.themoviedb.org/3/movie/popular");
+    page: topRatedPage,
+    updatePageCount: updateTopRatedPageCount,
+    data: topRatedData,
+    error: topRatedError,
+    isPending: isTopRatedPending,
+    isSuccess: isTopRatedSuccess,
+    isPlaceholderData: isTopRatedPlaceholder,
+  } = useQueryResults(
+    "topRated",
+    "https://api.themoviedb.org/3/movie/top_rated"
+  );
 
   const {
     page: upcomingPage,
@@ -71,15 +74,15 @@ const Movies = () => {
       {!search ? (
         <>
           <ContentCards
-            title="Popular"
-            content={filterContent(popularData?.results)}
+            title="Top Rated"
+            content={filterContent(topRatedData?.results)}
             contentType={contentTypes.movie}
-            pageCount={popularPage}
-            updatePageCount={updatePopularPageCount}
-            totalPages={popularData?.total_pages}
-            isPlaceHolder={isPopularPlaceholder}
-            isPending={isPopularPending}
-            isSuccess={isPopularSuccess}
+            pageCount={topRatedPage}
+            updatePageCount={updateTopRatedPageCount}
+            totalPages={topRatedData?.total_pages}
+            isPlaceHolder={isTopRatedPlaceholder}
+            isPending={isTopRatedPending}
+            isSuccess={isTopRatedSuccess}
           />
 
           <ContentCards
