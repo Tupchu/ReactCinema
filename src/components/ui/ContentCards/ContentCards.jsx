@@ -52,7 +52,7 @@ const ContentCards = ({
       setContainerHeight(0);
       localStorage.setItem(`${title}-${contentType}-length`, content?.length);
     }
-  });
+  }, [content]);
 
   const updateContainerHeight = (height) => {
     setContainerHeight(height);
