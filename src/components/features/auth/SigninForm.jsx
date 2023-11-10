@@ -1,95 +1,57 @@
-import { useRef, useState } from "react";
 import { useSignIn } from "@clerk/clerk-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import logo from "../../../assets/logo.svg";
 import "../auth/auth.css";
 
 const SigninForm = () => {
   const { isLoaded, signIn, setActive } = useSignIn();
-  const usernameRef = useRef();
-  const passwordRef = useRef();
-  const [errors, setErrors] = useState({
-    username: "",
-    password: "",
-  });
   const navigate = useNavigate();
 
-  // start the sign In process.
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm();
+
+  const onSubmit = async (data) => {
     if (!isLoaded) {
       return;
     }
+    try {
+      const result = await signIn.create({
+        identifier: data.userName,
+        password: data.password,
+      });
 
-    setErrors({ username: "", password: "" });
-
-    if (validateInputs()) {
-      try {
-        const result = await signIn.create({
-          identifier: usernameRef.current.value,
-          password: passwordRef.current.value,
-        });
-
-        if (result.status === "complete") {
-          await setActive({ session: result.createdSessionId });
-          navigate("/");
-        } else {
-        }
-      } catch (err) {
-        console.log(err);
-        err.errors.forEach((error) => {
-          if (error.meta.paramName === "identifier") {
-            setErrors((prevErrors) => {
-              return {
-                ...prevErrors,
-                username: error.longMessage.replace("Identifier", "Username"),
-              };
-            });
-          }
-
-          if (error.meta.paramName === "password") {
-            setErrors((prevErrors) => {
-              return {
-                ...prevErrors,
-                password:
-                  error.code === "form_password_incorrect"
-                    ? "Password is incorrect"
-                    : error.longMessage,
-              };
-            });
-          }
-        });
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
+        navigate("/");
+      } else {
       }
-    }
-  };
+    } catch (err) {
+      err.errors.forEach((error) => {
+        if (error.meta.paramName === "identifier") {
+          setError("userName", {
+            message: error.longMessage.replace("Identifier", "Username"),
+          });
+        }
 
-  const validateInputs = () => {
-    if (usernameRef.current.value === "") {
-      setErrors((prevErrors) => {
-        return {
-          ...prevErrors,
-          username: "Must enter username",
-        };
+        if (error.meta.paramName === "password") {
+          setError("password", {
+            message:
+              error.code === "form_password_incorrect"
+                ? "Password is incorrect"
+                : error.longMessage,
+          });
+        }
       });
     }
-
-    if (passwordRef.current.value === "") {
-      setErrors((prevErrors) => {
-        return {
-          ...prevErrors,
-          password: "Must enter password",
-        };
-      });
-    }
-
-    if (usernameRef.current.value === "" || passwordRef.current.value === "") {
-      return false;
-    }
-    return true;
   };
 
   return (
-    <form className="auth-form">
+    <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
       <Link to="/">
         <img src={logo} alt="Logo" className="form-logo" />
       </Link>
@@ -99,34 +61,32 @@ const SigninForm = () => {
       <div className="form-items">
         <div className="form-item">
           <input
-            ref={usernameRef}
-            id="username"
-            className={errors.username ? "error" : ""}
-            name="username"
+            {...register("userName", { required: "Username is required" })}
             type="text"
+            className={errors.userName ? "error" : ""}
             placeholder="Username"
             aria-label="Username"
             autoFocus
           />
-          <p className="error-text">{errors.username}</p>
+          {errors.userName && (
+            <p className="error-text">{errors.userName.message}</p>
+          )}
         </div>
         <div className="form-item">
           <input
-            ref={passwordRef}
-            id="password"
-            className={errors.password ? "error" : ""}
-            name="password"
+            {...register("password", { required: "Password is required" })}
             type="password"
+            className={errors.password ? "error" : ""}
             placeholder="Password"
             aria-label="Passowrd"
           />
-          <p className="error-text">{errors.password}</p>
+          {errors.password && (
+            <p className="error-text">{errors.password.message}</p>
+          )}
         </div>
       </div>
 
-      <button onClick={handleSubmit} className="btn">
-        Login
-      </button>
+      <button className="btn">Login</button>
 
       <p className="has-account">
         Don't have an account? {<Link to={"/signup"}>Sign Up</Link>}

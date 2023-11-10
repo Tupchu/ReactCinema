@@ -3,110 +3,60 @@ import { useSignUp } from "@clerk/clerk-react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../../assets/logo.svg";
 import "../auth/auth.css";
+import { useForm } from "react-hook-form";
 
 const SignupForm = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
-  const usernameRef = useRef();
-  const passwordRef = useRef();
-  const repeatPasswordRef = useRef();
-  const [errors, setErrors] = useState({
-    username: "",
-    password: "",
-    repeatPassword: "",
-  });
   const navigate = useNavigate();
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+    reset,
+    getValues,
+  } = useForm();
+
   // signup process
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     if (!isLoaded) {
       return;
     }
 
-    setErrors({ username: "", password: "", repeatPassword: "" });
+    try {
+      const result = await signUp.create({
+        username: data.username,
+        password: data.password,
+      });
 
-    if (validateInputs()) {
-      try {
-        const result = await signUp.create({
-          username: usernameRef.current.value,
-          password: passwordRef.current.value,
-        });
-
-        if (result.status === "complete") {
-          await setActive({ session: result.createdSessionId });
-          navigate("/");
-        } else {
-          // handle
-        }
-      } catch (err) {
-        err.errors.forEach((error) => {
-          console.log(error);
-          if (error.meta.paramName === "username") {
-            setErrors((prevErrors) => {
-              return {
-                ...prevErrors,
-                username: error.longMessage,
-              };
-            });
-          }
-
-          if (error.meta.paramName === "password") {
-            setErrors((prevErrors) => {
-              return {
-                ...prevErrors,
-                password:
-                  error.code === "form_password_pwned"
-                    ? "This password is not secure"
-                    : error.longMessage,
-              };
-            });
-            passwordRef.current.value = "";
-            repeatPasswordRef.current.value = "";
-          }
-        });
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
+        navigate("/");
+      } else {
+        // handle
       }
-    }
-  };
+    } catch (err) {
+      err.errors.forEach((error) => {
+        if (error.meta.paramName === "username") {
+          setError("username", { message: error.longMessage });
+        }
 
-  const validateInputs = () => {
-    if (usernameRef.current.value === "") {
-      setErrors((prevErrors) => {
-        return {
-          ...prevErrors,
-          username: "Must enter username",
-        };
+        if (error.meta.paramName === "password") {
+          setError("password", {
+            message:
+              error.code === "form_password_pwned"
+                ? "This password is not secure"
+                : error.longMessage,
+          });
+          reset({ password: "", repeatPassword: "" }, { keepErrors: true });
+        }
       });
     }
-
-    if (passwordRef.current.value === "") {
-      setErrors((prevErrors) => {
-        return {
-          ...prevErrors,
-          password: "Must enter password",
-        };
-      });
-    }
-
-    if (usernameRef.current.value === "" || passwordRef.current.value === "") {
-      return false;
-    }
-
-    if (passwordRef.current.value !== repeatPasswordRef.current.value) {
-      setErrors((prevErrors) => {
-        return {
-          ...prevErrors,
-          repeatPassword: "Passwords must match",
-        };
-      });
-      repeatPasswordRef.current.value = "";
-      return false;
-    }
-
-    return true;
   };
 
   return (
-    <form className="auth-form">
+    <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
       <Link to="/">
         <img src={logo} alt="Logo" className="form-logo" />
       </Link>
@@ -116,46 +66,48 @@ const SignupForm = () => {
       <div className="form-items">
         <div className="form-item">
           <input
-            ref={usernameRef}
-            id="username"
+            {...register("username", { required: "Username is required" })}
             className={errors.username ? "error" : ""}
-            name="username"
             type="text"
             placeholder="Username"
             aria-label="Username"
             autoFocus
           />
-          <p className="error-text">{errors.username}</p>
+          {errors.username && (
+            <p className="error-text">{errors.username.message}</p>
+          )}
         </div>
         <div className="form-item">
           <input
-            ref={passwordRef}
-            id="password"
+            {...register("password", { required: "Password is required" })}
             className={errors.password ? "error" : ""}
-            name="password"
             type="password"
             placeholder="Password"
             aria-label="Passowrd"
           />
-          <p className="error-text">{errors.password}</p>
+          {errors.password && (
+            <p className="error-text">{errors.password.message}</p>
+          )}
         </div>
         <div className="form-item">
           <input
-            ref={repeatPasswordRef}
-            id="repeatPassword"
-            className={errors.repeatPassword ? "error" : ""}
-            name="repeatPassword"
+            {...register("confirmPassword", {
+              required: "Confirm password is required",
+              validate: (value) =>
+                value === getValues("password") || "Passwords must match",
+            })}
+            className={errors.confirmPassword ? "error" : ""}
             type="password"
-            placeholder="Repeat Password"
-            aria-label="Repeat Password"
+            placeholder="Confirm Password"
+            aria-label="Confirm Password"
           />
-          <p className="error-text">{errors.repeatPassword}</p>
+          {errors.confirmPassword && (
+            <p className="error-text">{errors.confirmPassword.message}</p>
+          )}
         </div>
       </div>
 
-      <button onClick={handleSubmit} className="btn">
-        Signup
-      </button>
+      <button className="btn">Signup</button>
 
       <p className="has-account">
         Already have an account? {<Link to={"/signin"}>Login</Link>}
