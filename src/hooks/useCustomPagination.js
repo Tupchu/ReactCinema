@@ -26,8 +26,8 @@ export const useCustomPagination = (key, search = "") => {
       if (search !== "") {
         const filtered = items.filter((item) => {
           return key === contentTypes.television
-            ? item.name.includes(search)
-            : item.title.includes(search);
+            ? item.name.toLowerCase().includes(search.toLowerCase())
+            : item.title.toLowerCase().includes(search.toLowerCase());
         });
         setTotalPages(Math.ceil(filtered.length / resultsPerPage));
         return filtered.slice(startIndex, startIndex + resultsPerPage);
